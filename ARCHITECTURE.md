@@ -25,12 +25,12 @@
 
 ## 1. System Architecture
 
-> High-level overview showing every layer from raw media input through EfficientNet-B0 inference to final output. Maps directly to `web-app.py`, `classify.py`, and `inference/video_inference.py`.
+> High-level overview showing every layer from raw media input through EfficientNet-B0 inference to final output. Maps directly to `app.py`, `classify.py`, and `inference/video_inference.py`.
 
 ```mermaid
 graph TB
     subgraph "Layer 1 · Data Input"
-        A["Raw Media Files<br/>.jpg .png .mp4 .mov"] --> B["mimetypes.guess_type()<br/>web-app.py:33"]
+        A["Raw Media Files<br/>.jpg .png .mp4 .mov"] --> B["mimetypes.guess_type()<br/>app.py:33"]
         B --> C{Media Type?}
         C -->|"image/*"| D["PIL.Image.open()<br/>→ RGB convert"]
         C -->|"video/*"| E["cv2.VideoCapture()<br/>Frame Extraction"]
@@ -112,7 +112,7 @@ graph LR
     end
 
     subgraph "Web Application"
-        A4["Gradio gr.Blocks<br/>web-app.py"] --> B4["gr.File upload<br/>.jpg .png .mp4 .mov"]
+        A4["Gradio gr.Blocks<br/>app.py"] --> B4["gr.File upload<br/>.jpg .png .mp4 .mov"]
         B4 --> C4["predict_file()<br/>MIME routing"]
         C4 --> D4["gr.Textbox Prediction<br/>gr.Textbox Confidence<br/>gr.Image Preview"]
     end
@@ -187,7 +187,7 @@ flowchart TD
 
 ## 4. Use Case Diagram
 
-> All user-facing capabilities of the system, derived from entry points: `web-app.py`, `classify.py`, `realeval.py`, `main_trainer.py`, and tool scripts.
+> All user-facing capabilities of the system, derived from entry points: `app.py`, `classify.py`, `realeval.py`, `main_trainer.py`, and tool scripts.
 
 ```mermaid
 graph TB
@@ -243,7 +243,7 @@ graph TB
 
 ## 5. Sequence Diagrams
 
-### 5.1 Web App — Image Upload Flow (`web-app.py`)
+### 5.1 Web App — Image Upload Flow (`app.py`)
 
 ```mermaid
 sequenceDiagram
@@ -278,7 +278,7 @@ sequenceDiagram
     UI-->>User: Show 🟢Real/🔴Deepfake + Confidence + Preview
 ```
 
-### 5.2 Web App — Video Upload Flow (`web-app.py`)
+### 5.2 Web App — Video Upload Flow (`app.py`)
 
 ```mermaid
 sequenceDiagram
@@ -438,7 +438,7 @@ classDiagram
     }
 
     class GradioWebApp {
-        <<web-app.py>>
+        <<app.py>>
         +model: EfficientNetB0
         +preprocess: Compose
         +load_model() nn.Module
@@ -671,7 +671,7 @@ graph TB
     end
 
     subgraph "Inference Interfaces"
-        WA["web-app.py<br/>Gradio UI"]
+        WA["app.py<br/>Gradio UI"]
         CL["classify.py<br/>CLI single image"]
         RE["realeval.py<br/>Batch eval + noise sim"]
         VI["inference/video_inference.py<br/>Multi-frame video"]
@@ -726,7 +726,7 @@ graph TB
         end
 
         subgraph "Application Process"
-            WA["web-app.py<br/>python web-app.py"]
+            WA["app.py<br/>python app.py"]
             GRADIO["Gradio Server<br/>http://127.0.0.1:7860"]
         end
 
@@ -791,7 +791,7 @@ graph TB
     subgraph "Application Container"
         subgraph "Docker Container"
             PY["Python Runtime"]
-            APP["web-app.py<br/>Gradio Server :7860"]
+            APP["app.py<br/>Gradio Server :7860"]
             MODEL["EfficientNet-B0<br/>best_model-v3.pt"]
         end
     end
@@ -1051,7 +1051,7 @@ DeepfakeDetector/
 ├── main_trainer.py                # Training orchestrator (PyTorch Lightning)
 ├── classify.py                    # CLI single-image classifier
 ├── realeval.py                    # Batch evaluator with noise simulation
-├── web-app.py                     # Gradio web interface
+├── app.py                     # Gradio web interface
 ├── requirements.txt               # Python dependencies (10 packages)
 │
 ├── models/
@@ -1100,7 +1100,7 @@ DeepfakeDetector/
 graph LR
     A["📁 Data Prep<br/>tools/*"] --> B["🏋️ Training<br/>main_trainer.py"]
     B --> C["💾 Model Export<br/>export_to_pt.py"]
-    C --> D["🔍 Inference<br/>web-app.py<br/>classify.py<br/>realeval.py"]
+    C --> D["🔍 Inference<br/>app.py<br/>classify.py<br/>realeval.py"]
     D --> E["📊 Results<br/>Real / Deepfake<br/>+ Confidence %"]
 
     style A fill:#6366f1,stroke:#4f46e5,color:#fff

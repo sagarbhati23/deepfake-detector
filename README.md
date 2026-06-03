@@ -117,7 +117,7 @@ models/best_model-v3.pt
 ## 🖥️ Run Web Application
 
 ```bash
-python web-app.py
+python app.py
 ```
 
 ---
