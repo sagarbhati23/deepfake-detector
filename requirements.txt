@@ -8,3 +8,4 @@ Pillow
 numpy
 scikit-learn
 tensorboard
+gradio==4.44.1
